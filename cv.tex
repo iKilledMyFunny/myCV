@@ -1,0 +1,343 @@
+\documentclass[a4paper,10pt]{article}
+
+%A Few Useful Packages
+\usepackage{marvosym}
+\usepackage{fontspec} 					%for loading fonts
+\usepackage{xunicode,xltxtra,url,parskip} 	%other packages for formatting
+\RequirePackage{color,graphicx}
+\usepackage[usenames,dvipsnames]{xcolor}
+%\usepackage[big]{layaureo} 				%better formatting of the A4 page
+% an alternative to Layaureo can be ** \usepackage{fullpage} **
+\usepackage{supertabular} 				%for Grades
+\usepackage{titlesec}					%custom \section
+%Setup hyperref package, and colours for links
+%\usepackage{hyperref}
+\definecolor{linkcolour}{rgb}{0,0.2,0.6}
+%\hypersetup{colorlinks,breaklinks,urlcolor=linkcolour, linkcolor=linkcolour}
+
+%----------------------- CUSTOM PACKAGES ADDED -----------------------------------
+%\usepackage[showframe, margin=5mm, centering, includemp, marginparsep=2mm, marginparwidth=60mm]{geometry}
+%\usepackage[left=72mm, top=15mm, bottom=15mm, right=9mm, centering, marginparsep=0pt, marginparwidth=0pt, nohead, nofoot]{geometry}
+\usepackage[left=9mm, top=15mm, bottom=15mm, right=9mm, centering, marginparsep=0pt, marginparwidth=0pt, nohead, nofoot]{geometry}
+\usepackage[absolute,overlay]{textpos}
+\usepackage{lipsum}
+\usepackage{tabularx}
+\usepackage{ragged2e}
+\usepackage{tabulary}
+%\usepackage{layouts}
+\usepackage{fontawesome}
+\usepackage{tikz}
+\usepackage[absolute]{textpos}
+\usepackage{forloop}
+\usepackage{xstring}
+\usepackage{etoolbox}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+%\usepackage{lua-visual-debug}
+
+%------------------------------------------------------------------------------
+%FONTS
+\defaultfontfeatures{Mapping=tex-text}
+\setmainfont[
+SmallCapsFont = Fontin-SmallCaps.otf,
+BoldFont = Fontin-Bold.otf,
+ItalicFont = Fontin-Italic.otf
+]
+{Fontin.otf}
+%%%
+
+%CV Sections inspired by: 
+%http://stefano.italians.nl/archives/26
+\titleformat{\section}{\Large\scshape\raggedright}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{3pt}{1mm}
+
+\titleformat{\subsection}{\normalsize\scshape\raggedright}{}{0em}{}[\titlerule]
+\titlespacing{\subsection}{0pt}{3pt}{1mm}
+
+%Tweak a bit the top margin
+%\addtolength{\voffset}{-1.3cm}
+
+%Italian hyphenation for the word: ''corporations''
+\hyphenation{im-pre-se}
+
+% ----------------------- CUSTOM SETTINGS ---------------------------
+
+\textblockorigin{156mm}{26.8mm}
+\setlength{\TPHorizModule}{44mm}
+%\setlength{\TPVertModule}{0mm}
+\TPMargin{0mm}
+\setlength{\tymin}{1.6cm}
+\setlist{noitemsep}
+\setlist[itemize]{leftmargin=0em,listparindent=0em,labelsep=2mm,itemindent=0em}
+%\setlength{\tabcolsep}{2mm}
+
+%----------------------- CUSTOM COMMANDS AND SETUP ---------------
+
+\definecolor{white}{RGB}{255,255,255}
+\definecolor{mainblue}{HTML}{0E5484}
+\definecolor{maingray}{HTML}{B9B9B9}
+\definecolor{darkgray}{HTML}{333333}
+\definecolor{gray}{HTML}{4D4D4D}
+\definecolor{lightgray}{HTML}{999999}
+\definecolor{green}{HTML}{C2E15F}
+\definecolor{orange}{HTML}{FDA333}
+\definecolor{purple}{HTML}{D3A4F9}
+\definecolor{red}{HTML}{FB4485}
+\definecolor{blue}{HTML}{6CE0F1}
+\definecolor{pblue}{HTML}{0395DE}
+\definecolor{materialpurple}{HTML}{9C27B0}
+\definecolor{materialindigo}{HTML}{3F51B5}
+\definecolor{materialblue}{HTML}{2196F3}
+\definecolor{materialcyan}{HTML}{00BCD4}
+\definecolor{materialteal}{HTML}{009688}
+\definecolor{materialgreen}{HTML}{4CAF50}
+\definecolor{materiallime}{HTML}{CDDC39}
+\definecolor{materialamber}{HTML}{FFC107}
+\definecolor{materialbrown}{HTML}{795548}
+\definecolor{materialred}{HTML}{FF4436}
+\definecolor{materialorange}{HTML}{FF5722}
+\definecolor{linkedin}{HTML}{0085AE}
+\definecolor{test}{HTML}{0077be}
+\definecolor{yt}{HTML}{c71610}
+\definecolor{mycustom}{HTML}{333333}
+
+\colorlet{backgroundgrey}{black!5!white}
+\colorlet{emptyboxes}{backgroundgrey!90!black}
+\colorlet{filledboxes}{mycustom!80!white}
+
+\newcolumntype{B}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{M}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{F}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\newcounter{currboxcounter}
+\newcommand{\addskillbar}[1]{
+\fill[emptyboxes] (0,-0.05) rectangle (1.69,0.27);
+\fill[filledboxes] (0,-0.05) rectangle (#1*1.69/4,0.27);
+	%\foreach \x in {0.62, 1.29, 1.96, 2.63}
+	%\foreach \x in {0.4, 0.825, 1.25, 1.675}
+		\foreach \x in {0.4, 0.83, 1.26}
+	{%
+		\fill[white] (\x,-0.05) rectangle (\x+0.03,0.27);
+	}%
+}%
+
+\def\addskill#1/#2!{\textsc{#1} & 
+\begin{tikzpicture}
+\addskillbar{#2}
+\end{tikzpicture}\\[0.5mm]
+}
+\newcommand{\skillsec}[1]{
+%\vspace{2mm}
+%\textbf{\textsc{#1}}
+%\vspace{2mm}
+    \renewcommand*\do[1]{\addskill##1!}%
+    \begin{tabular}{@{}B{26mm}@{\hspace{1mm}}F{17mm}@{}}%
+        \docsvlist{#1}
+    \end{tabular}
+    \bigskip
+}
+
+\newcommand*{\bulletfontstyle}[1]{\fontsize{8.5pt}{1em}\selectfont\color{mycustom} #1}
+%\newcommand*{\bulletfontstyle}[1]{\footnotesize{#1}}
+
+\newcommand{\addeducation}[5]{%
+\textsc{#1} & \textbf{#2}\\
+Thesis & \textsc{#4}\\
+& \emph{#3}
+#5%
+}
+
+
+\newcommand{\addexperience}[8]{%
+\textsc{#1} & \textbf{#3 (#6)}\\%
+\textsc{#2} & #4, #5\\
+& \begin{minipage}{0.84\textwidth}
+\begin{itemize}%
+\bulletfontstyle{#7}%
+\end{itemize}
+\end{minipage}\\%
+\bulletfontstyle{Stack} & \bulletfontstyle{#8}\\%
+}
+
+%\newenvironment{experience}{\begin{tabularx}{\linewidth}{X|X}}{\end{tabularx}}
+\newenvironment{mainevn}{%
+\vspace{2mm}
+%\def\arraystretch{0.9}
+\tabularx{\linewidth}{>{\raggedleft\arraybackslash\hsize=0.25\hsize}X@{\hspace{2mm}}|@{\hspace{1mm}}>{\hsize=1.75\hsize}X}}
+{\endtabularx\vspace{8mm}}
+
+%--------------------BEGIN DOCUMENT----------------------
+\begin{document}
+
+\pagestyle{empty} % non-numbered pages
+%\font\fb=''[cmr10]'' %for use with \LaTeX command
+
+
+\begin{center}
+{\Huge MUNEEB AHMED\par}%
+\bigskip\par
+
+%    $\begin{array}{l}
+%        $\Large$ \textnormal{\faMobilePhone} 
+%    \end{array}$\vspace{2mm} +49 176 70221259%
+%    \hspace{2mm}|\hspace{2mm}
+%    $\begin{array}{l}
+%        $\large$ \textnormal{\faBirthdayCake} 
+%    \end{array}$\vspace{2mm} 02-07-1989\\[0.28mm]%
+
+\begin{tabular}{l|l|l|l}%{@{\hspace{2mm}}l@{\hspace{2mm}}l@{}}
+    $\begin{array}{l}
+        $\Large$ \textnormal{\faMobilePhone} 
+    \end{array}$\vspace{2mm} +49 176 70221259 &
+    $\begin{array}{l}
+        $\large$ \textnormal{\faBirthdayCake} 
+    \end{array}$\vspace{2mm} 02-07-1989 &
+    $\begin{array}{l}
+        $\large$ \textnormal{\faBed} 
+    \end{array}$\vspace{2mm} Darmstadt, Germany &
+    $\begin{array}{l}
+        $\large$ \textnormal{\faEnvelopeO} 
+    \end{array}$\vspace{2mm} muneeb\_ahmed@outlook.com\\
+    %& \href{mailto:muneeb\_ahmed@outlook.com}{muneeb\_ahmed@outlook.com}\\
+\end{tabular}
+\end{center}
+\bigskip
+
+\begin{textblock}{1}[0,0](0, 0)
+%\begin{tcolorbox}[boxsep=0mm, width=69mm,height=287mm,colframe=white]
+
+%--------------------TITLE-------------
+\bigskip
+\begin{flushleft}
+
+%\bigskip
+%\begin{center}
+%\includegraphics[width=0.7\textwidth]{download.png}
+%\end{center}
+\vspace{15mm}
+\section{Skills}
+\bigskip
+\skillsec{Basic/1,Intermediate/2,Advanced/3,Expert/4}
+\subsection{Programming Languages}
+\skillsec{Embedded C/3,Python/4,C++/3,Java/3}
+\subsection{Systems / Frameworks}
+\skillsec{Embedded Linux/2,FreeRTOS/3,Yocto/2,ARM/3,SoC/3}
+\subsection{Bus Systems / Protocols}
+\skillsec{SPI UART I2C/4,BLE 4.2/3,Xbee/3,CAN/1,AUTOSAR/1}
+\subsection{Libraries}
+\skillsec{matplotlib/4,OpenCV/3,Dlib/3}
+\subsection{Environments}
+\skillsec{Visual Studio/3,PyCharm/4,Eclipse/4}
+\subsection{Others}
+\skillsec{Git/4,LTSpice/2,SCRUM/4,UML/2}
+\end{flushleft}
+\end{textblock}
+%--------------------SECTIONS-----------------------------------
+\noindent
+%\begin{minipage}{0.4\textwidth}
+%\lipsum[0]
+%\end{minipage}
+\begin{minipage}[c]{0.67\textwidth}
+\section{Education}
+%\begin{tabulary}{\linewidth}{L|J}%
+\begin{mainevn}
+\addeducation{Apr 2018}%
+{Master of Science in Information and Communication Engineering}%
+{Technische Universität Darmstadt, Germany}%
+{Improving a Linux Device Driver for Visible Light Communication}%
+{\\ & \begin{minipage}{0.84\textwidth}
+\begin{itemize}
+\bulletfontstyle{%
+\item The openVLC platform is based on BeagleBone Black with a hardware extension attached to it and can be used for rapid-prototyping while researching Visible Light Communication (VLC) networks.
+\item Developed a network device driver for the platform.
+\item Made the driver conform to the IEEE Std 802.15.7 for short-ranged VLC.
+\item This involved implementation of a software-defined MAC and PHY layer. 
+\item Optimized the driver. Designed it to be fast, structured, flexible and stable.%
+}%
+\end{itemize}
+\end{minipage}
+}
+\\\multicolumn{2}{c}{} \\%
+
+\addeducation{Sep 2011}%
+{Bachelor of Science in Electrical (Telecommunication) Engineering}%
+{National University of Science and Technology (NUST), Pakistan}%
+{Brain-Computer Interface: Implementation of a virtual keyboard}%
+{\\}
+\end{mainevn}
+
+\section{Professional Experience}
+\begin{mainevn}
+\addexperience{Current}{Apr 2018}{Part-time Embedded Systems Engineer}{ALCAN Systems GmbH}{Darmstadt}%
+{Electronics Department}%
+{%
+\item Firmware development of a smart antenna control unit based on liquid crystals.
+\item Target microcontroller is ARM Cortex-M.
+\item Development of an Attitude and Heading Reference System (AHRS) to calculate the True North using IMU and GPS readings.%
+}{Embedded C | FreeRTOS | Kalman Filters | IMU | Bus Interfaces}%
+\multicolumn{2}{c}{}\\
+%
+%
+%
+\addexperience{Mar 2018}{Nov 2015}{Work student}{AGT International}{Darmstadt}%
+{Image Processing Department}%
+{%
+\item Developed a number of image processing algorithms for various end applications.
+\item The development process involved combining various standard techniques with novel approaches of image processing.
+\item Standard methods used include optical flow, kalman filters, segmentation algorithms, clustering algorithms, deep learning etc.
+}{Python | C++ | OpenCV | DLib | Machine Learning}
+\multicolumn{2}{c}{}\\
+%
+%
+%
+\addexperience{Oct 2015}{Jul 2014}{Work student}{Software AG}{Eberstadt}%
+{Globalization Department}{%
+\item Java software development using Eclipse Rich Client Platform (RCP) framework. 
+\item Test driven software development using JUnit/Mockito.
+\item Development of XQuery expressions and working with an XML database.%
+}{Java | Eclipse | ANT scripting | XQuery}
+%\multicolumn{2}{c}{}\\
+%\addexperience{Sep 2013}{Feb 2012}{Core Operations Engineer}{Nokia Solutions and Networks}{Pakistan}%
+%{Core Backup Team}{%
+%\item Hardware management of MGW's and MSS's.
+%\item System upgrades and backup management as well as setting up of new network elements.
+%\item Fault management activities.%
+%}{Telecom Network operations | NSN proprietary equipment maintenance}
+\end{mainevn}
+
+%\section{Achievements, Interests and Activities}
+%Part of AIESEC Marketing team\\
+%Received scholarships from W\&R Dte GHQ and NUST HQ for academic excellence\\
+%Won Inter-university short film competition\\
+%Event head in the MCS Myriad 2011
+%\newline
+%Section: Languages
+\section{Languages}
+%\begin{tabular}{rl}
+\begin{mainevn}
+\textsc{English} & Fluent (8.0 IELTS Score)\\
+\textsc{German} & Intermediate (A2 course)\\
+\textsc{Urdu} & Fluent (Mother tongue)
+%\end{tabular}
+%\newline
+\end{mainevn}
+\end{minipage}
+%Paperwidth is: \printinunitsof{mm}\prntlen{\paperwidth}
+%\\
+%Textwidth is: \printinunitsof{mm}\prntlen{\textwidth}
+%\\
+%Marginparsep is: \printinunitsof{mm}\prntlen{\marginparsep}
+%\\
+%Marginparwidth is: \printinunitsof{mm}\prntlen{\marginparwidth}
+%\\
+%TPHorizModule is : \printinunitsof{mm}\prntlen{\TPHorizModule}
+%\\
+%TPVertModule is : \printinunitsof{mm}\prntlen{\TPVertModule}
+
+%\begin{textblock}{3.28}[0,0](0, 15.1)
+%\center
+%\large References can be provided on demand
+%\hrule
+%\end{textblock}
+
+\end{document}
